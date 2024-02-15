@@ -30,6 +30,7 @@
 template <class TRod>
 TRod MockRod(int id) {
     TRod rod;
+    rod.index = id;
     rod.gid = id;
     rod.length = 400;
     rod.rank = 0;
@@ -54,6 +55,7 @@ TRod MockRod(int id) {
  */
 class ExampleRod {
   public:
+    int index;             ///< local id unique to the current rank
     int gid;             ///< global unique id
     double radius;       ///< radius
     double length;       ///< length

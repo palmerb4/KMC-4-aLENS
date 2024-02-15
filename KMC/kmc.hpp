@@ -557,8 +557,8 @@ void KMC<TRod, TSphere>::UpdateSphereDistArr(const int j_sphere,
                                              const TSphere &sphere) {
     assert(sphere.radius > 0);
     const double *rScaled = sphere.pos;
-    double ds[3],    // Non-scaled vector from sphere center to protein
-        dsScaled[3]; // Scaled ds[3]
+    double ds[3];       // Non-scaled vector from sphere center to protein
+    double dsScaled[3]; // Scaled ds[3]
 
     /* If we have PBCs, find center-to-center distance between sphere and
        protein along periodic subspace */

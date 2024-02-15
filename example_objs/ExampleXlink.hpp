@@ -38,8 +38,9 @@ class ExampleXlink {
     ///< Case3 both bind -> pos = mid-point of posEndBind
 
     // time varying properties
-    bool changeBind[2] = {true, true};  ///< flag for if binding status changes
-    int idBind[2] = {IDUB, IDUB};       ///< ID of bind MT
+    bool changeBind[2] = {true, true};  ///< flag for if binding status change
+    int indexBind[2] = {IDUB, IDUB};       ///< ID of bind MT
+    int gidBind[2] = {IDUB, IDUB};       ///< ID of bind MT
     int rankBind[2] = {IDUB, IDUB};     ///< mpi rank of bind MT
     double lenBind[2] = {NAN_D, NAN_D}; ///< length of bind MT
     double distBind[2] = {NAN_D, NAN_D};
@@ -107,7 +108,8 @@ class ExampleXlink {
      * @param end 0 or 1
      */
     void setUnBind(int end) {
-        idBind[end] = IDUB;
+        indexBind[end] = IDUB;
+        gidBind[end] = IDUB;
         rankBind[end] = IDUB;
         lenBind[end] = NAN_D;
         distBind[end] = NAN_D;
@@ -139,13 +141,16 @@ class ExampleXlink {
      *
      * @return: void
      */
-    void setBind(int end, const int gid, const double directionLine[3],
+    void setBind(int end, const int index, const int gid, const double directionLine[3],
                  const double centerLine[3], const double centerDist,
                  const double length, const int rank) {
         assert(end == 0 || end == 1); // Make sure you choose a viable head
-        assert(idBind[end] == IDUB);  // Make sure end is originally unbound
+        assert(gidBind[end] == IDUB);  // Make sure end is originally unbound
+        assert(indexBind[end] == IDUB);  // Make sure end is originally unbound
         assert(gid != IDUB);
-        idBind[end] = gid;
+        assert(index != IDUB);
+        indexBind[end] = index;
+        gidBind[end] = gid;
         distBind[end] = centerDist;
         lenBind[end] = length;
         rankBind[end] = rank;
@@ -170,7 +175,7 @@ class ExampleXlink {
      * @param end
      */
     void updatePosEndBind(const int end) {
-        if (idBind[end] == IDUB) {
+        if (gidBind[end] == IDUB) {
             setUnBind(end);
         } else {
             for (int i = 0; i < 3; i++) { // posEnd = direction * dist + center
@@ -188,11 +193,11 @@ class ExampleXlink {
      * This must be called when posEndBind is valid
      */
     void updatePosWithEndBind() {
-        if (idBind[0] != IDUB && idBind[1] == IDUB) { // Case 2
+        if (gidBind[0] != IDUB && gidBind[1] == IDUB) { // Case 2
             std::copy(posEndBind[0], posEndBind[0] + 3, pos);
-        } else if (idBind[0] == IDUB && idBind[1] != IDUB) { // Case 2
+        } else if (gidBind[0] == IDUB && gidBind[1] != IDUB) { // Case 2
             std::copy(posEndBind[1], posEndBind[1] + 3, pos);
-        } else if (idBind[0] != IDUB && idBind[1] != IDUB) { // Case 1
+        } else if (gidBind[0] != IDUB && gidBind[1] != IDUB) { // Case 1
             for (int i = 0; i < 3; i++) {
                 pos[i] = 0.5 * (posEndBind[0][i] + posEndBind[1][i]);
             }
@@ -205,7 +210,7 @@ class ExampleXlink {
      * @param end
      */
     void updatePosEndClamp(int end) {
-        if (idBind[end] != IDUB) {
+        if (gidBind[end] != IDUB) {
             const double lenHalf = lenBind[end] * 0.5;
             if (distBind[end] > lenHalf)
                 distBind[end] = lenHalf;
@@ -283,7 +288,7 @@ class ExampleXlink {
      * \param end Which protein end
      * \return ID of rod protein is bound to
      */
-    int getBindID(int end) const { return idBind[end]; }
+    int getBindID(int end) const { return gidBind[end]; }
 
     /*! \brief Create a mock xlink for easy testing. Starts unbound at pos
      *  {0, 0, 0}

@@ -63,4 +63,3 @@ inline int choose_kmc_double(double kmc0Prob, double kmc1Prob, double &roll) {
 }
 
 #endif /* end of include guard KMC_CHOOSE_HPP */
-

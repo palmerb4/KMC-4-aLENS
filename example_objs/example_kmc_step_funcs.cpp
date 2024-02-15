@@ -65,7 +65,7 @@ void KMC_U(const ProteinData &pData, const int Npj,
     printf("U->S Binding\n");
 #endif
 
-    pBind.setBind(head_bound, rod.gid, rod.direction, rPos, bindPos, rod.length,
+    pBind.setBind(head_bound, rod.index, rod.gid, rod.direction, rPos, bindPos, rod.length,
                   rod.rank);
     return;
 }
@@ -145,7 +145,7 @@ void KMC_S(const ProteinData &pData, const int Npj,
         printf("S->D Binding\n");
 #endif
         // Bind protein to rod
-        pBind.setBind(head_activate, rod.gid, rod.direction, rPos, bindPos,
+        pBind.setBind(head_activate, rod.index, rod.gid, rod.direction, rPos, bindPos,
                       rod.length, rod.rank);
     }
     return;

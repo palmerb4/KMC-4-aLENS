@@ -23,6 +23,7 @@
 template <class TSphere>
 TSphere MockSphere(int id) {
     TSphere sphere;
+    sphere.index = id;
     sphere.gid = id;
     sphere.rank = 0;
     sphere.radius = .5;
@@ -37,6 +38,7 @@ TSphere MockSphere(int id) {
  */
 class ExampleSphere {
   public:
+    int index;             ///< local id unique to the current rank
     int gid;             ///< global unique id
     double radius;       ///< radius
     double pos[3];       ///< position
